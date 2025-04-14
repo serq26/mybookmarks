@@ -5,8 +5,8 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 
 export const Filter = () => {
   return (
-    <SegmentGroup.Root colorPalette={"purple"}>
-      <SegmentGroup.Indicator />
+    <SegmentGroup.Root>
+      <SegmentGroup.Indicator style={{ background: "green" }} />
       <SegmentGroup.Items
         items={[
           {
