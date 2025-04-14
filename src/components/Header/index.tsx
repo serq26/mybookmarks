@@ -19,7 +19,7 @@ const Header = () => {
         <>
           <Icon as={FaBookmark} w={6} h={6} color="white" mr={2} />
           <Heading size="lg" fontWeight="bold">
-            My BookMarks
+            My BookMarks22
           </Heading>
         </>
         <Spacer />
