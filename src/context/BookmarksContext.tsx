@@ -26,6 +26,7 @@ interface BookmarksContextType {
   deleteBookmark: (title: string) => Promise<boolean>;
   filter: FilterType;
   filterBookmarks: (key: BookmarkKey, value: string) => void;
+  getBookmarks: () => Promise<void>;
 }
 
 const BookmarksContext = createContext<BookmarksContextType | undefined>(
@@ -38,19 +39,19 @@ export const BookmarksProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const getBookmarks = async () => {
-      try {
-        const response = await getItems();
-        setBookmarks(response);
-      } catch (err) {
-        console.error("Error fetching bookmarks", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getBookmarks();
   }, []);
+
+  const getBookmarks = async () => {
+    try {
+      const response = await getItems();
+      setBookmarks(response);
+    } catch (err) {
+      console.error("Error fetching bookmarks", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addBookmark = async (
     title: string,
@@ -80,6 +81,7 @@ export const BookmarksProvider = ({ children }: { children: ReactNode }) => {
         filterBookmarks,
         filter,
         deleteBookmark,
+        getBookmarks,
       }}
     >
       {children}

@@ -1,24 +1,17 @@
-import {
-  Box,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  Icon,
-  Link,
-  Skeleton,
-  SkeletonText,
-} from "@chakra-ui/react";
+import { Box, Button, Card, Flex, Heading, Icon, Link } from "@chakra-ui/react";
 import { getWebsiteIcon } from "../../utils";
 import { useBookmarks } from "../../context/BookmarksContext";
 import { useEffect, useState } from "react";
 import { Bookmark } from "../../types/bookmark";
 import { RiArrowRightLine, RiDeleteBinLine } from "react-icons/ri";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
+import { ListSkeleton } from "../Skeletons/ListSkeleton";
+import { toaster } from "../ui/toaster";
 
 const List = () => {
-  const { bookmarks, loading, filter, deleteBookmark } = useBookmarks();
-  const { confirm } = useConfirmDialog();
+  const { bookmarks, loading, filter, deleteBookmark, getBookmarks } =
+    useBookmarks();
+  const { confirmPopup, ConfirmDialog } = useConfirmDialog();
   const [filteredData, setFilteredData] = useState<Bookmark[]>([]);
 
   useEffect(() => {
@@ -31,48 +24,36 @@ const List = () => {
   }, [bookmarks, filter.website]);
 
   const handleDeleteItem = async (documentId: string) => {
-    const confirmed = await confirm({
-      title: "Silme işlemi",
-      message: "Bu öğeyi silmek istediğinizden emin misiniz?",
+    const confirmed = await confirmPopup({
+      title: "Delete Bookmark",
+      message: "Are you sure you want to delete this item?",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      confirmType: "delete",
     });
     if (confirmed) {
-      console.log("Silme işlemi onaylandı.");
-      // Silme işlemini yap
-    } else {
-      console.log("Kullanıcı vazgeçti.");
+      const response = await deleteBookmark(documentId);
+      if (response) {
+        getBookmarks();
+        toaster.success({
+          title: `Bookmark was deleted.`,
+          type: "success",
+          duration: 5000,
+          closable: true,
+        });
+      } else {
+        toaster.error({
+          title: `Bookmark cannot delete!`,
+          type: "remove",
+          duration: 5000,
+          closable: true,
+        });
+      }
     }
-    console.log("document => ", documentId);
-    return;
-    await deleteBookmark(documentId);
   };
 
   if (loading) {
-    return (
-      <>
-        {[1, 2, 3].map((item) => (
-          <Card.Root
-            key={item}
-            className="list_card"
-            size="md"
-            width="100%"
-            mb={4}
-          >
-            <Card.Header>
-              <Flex justify="space-between">
-                <Skeleton height="20px" width="60%" />
-                <Skeleton boxSize={6} borderRadius="full" />
-              </Flex>
-            </Card.Header>
-            <Card.Body>
-              <SkeletonText mt="4" noOfLines={3} />
-            </Card.Body>
-            <Card.Footer justifyContent="end">
-              <Skeleton height="10px" width="30%" />
-            </Card.Footer>
-          </Card.Root>
-        ))}
-      </>
-    );
+    return <ListSkeleton />;
   }
 
   return (
@@ -118,6 +99,7 @@ const List = () => {
           </Card.Footer>
         </Card.Root>
       ))}
+      {ConfirmDialog}
     </>
   );
 };

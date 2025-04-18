@@ -18,6 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { IoLinkOutline } from "react-icons/io5";
 import { MdBookmarkAdd } from "react-icons/md";
 import { useBookmarks } from "../../context/BookmarksContext";
+import { toaster } from "../ui/toaster";
 
 const formSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
@@ -29,7 +30,7 @@ const formSchema = yup.object().shape({
 type FormValues = yup.InferType<typeof formSchema>;
 
 export const AddForm = () => {
-  const { addBookmark } = useBookmarks();
+  const { addBookmark, getBookmarks } = useBookmarks();
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -51,8 +52,20 @@ export const AddForm = () => {
     );
     if (result.id) {
       setLoading(false);
-      reset();
+      getBookmarks();
+      toaster.success({
+        title: `Bookmark added.`,
+        duration: 5000,
+        closable: true,
+      });
+    } else {
+      toaster.error({
+        title: `Bookmark cannot added.`,
+        duration: 5000,
+        closable: true,
+      });
     }
+    reset();
   });
 
   return (
@@ -85,7 +98,7 @@ export const AddForm = () => {
                       padding: "8px",
                       borderRadius: "4px",
                     }}
-                    placeholder="Enter title"
+                    placeholder="Title"
                   />
                 )}
               />
@@ -105,7 +118,7 @@ export const AddForm = () => {
                       padding: "8px",
                       borderRadius: "4px",
                     }}
-                    placeholder="Enter description"
+                    placeholder="Description"
                   />
                 )}
               />
@@ -122,7 +135,7 @@ export const AddForm = () => {
                       <Icon as={IoLinkOutline} w={6} h={6} color="gray" />
                     }
                   >
-                    <Input {...field} placeholder="Enter link" />
+                    <Input {...field} placeholder="Link" />
                   </InputGroup>
                 )}
               />
