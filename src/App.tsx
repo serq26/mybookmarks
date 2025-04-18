@@ -3,10 +3,11 @@ import Header from "./components/Header";
 import { AddForm } from "./components/AddForm";
 import { Filter } from "./components/Filter";
 import List from "./components/List";
+import { BookmarksProvider } from "./context/BookmarksContext";
 
 function App() {
   return (
-    <>
+    <BookmarksProvider>
       <Header />
       <Grid templateColumns="repeat(3, 1fr)" gap="6">
         <GridItem colSpan={2}>
@@ -22,7 +23,7 @@ function App() {
           <AddForm />
         </GridItem>
       </Grid>
-    </>
+    </BookmarksProvider>
   );
 }
 

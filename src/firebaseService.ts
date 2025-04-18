@@ -4,18 +4,12 @@ import {
   getDocs,
   query,
   orderBy,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 import db from "./firebaseConfig";
 import { firebaseTimestampToDate } from "./utils";
-
-export interface FirebaseItem {
-  id: string;
-  title: string;
-  description: string;
-  link: string;
-  website: string;
-  createdAt: string;
-}
+import { Bookmark } from "./types/bookmark";
 
 export const addItem = async (
   title: string,
@@ -32,10 +26,21 @@ export const addItem = async (
       createdAt: new Date(),
     });
     console.log("Document written with ID: ", docRef.id);
-    return { id: docRef.id, title, description, link, website };
+    return { id: docRef.id, title, description, link, website } as Bookmark;
   } catch (error) {
     console.error("Error adding document: ", error);
     throw new Error("Data could not be saved");
+  }
+};
+
+export const deleteItemById = async (documentId: string) => {
+  try {
+    await deleteDoc(doc(db, "items", documentId));
+    console.log("Document deleted with ID:", documentId);
+    return true;
+  } catch (error) {
+    console.error("Error deleting document:", error);
+    throw new Error("Item could not be deleted");
   }
 };
 
@@ -43,7 +48,7 @@ export const getItems = async () => {
   try {
     const q = query(collection(db, "items"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
-    const items: FirebaseItem[] = [];
+    const items: Bookmark[] = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       data.createdAt = firebaseTimestampToDate(data.createdAt).toLocaleString(
@@ -58,7 +63,7 @@ export const getItems = async () => {
       items.push({
         id: doc.id,
         ...data,
-      } as FirebaseItem);
+      } as Bookmark);
     });
     return items;
   } catch (error) {

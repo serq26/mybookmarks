@@ -17,7 +17,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IoLinkOutline } from "react-icons/io5";
 import { MdBookmarkAdd } from "react-icons/md";
-import { addItem } from "../../firebaseService";
+import { useBookmarks } from "../../context/BookmarksContext";
 
 const formSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
@@ -29,6 +29,7 @@ const formSchema = yup.object().shape({
 type FormValues = yup.InferType<typeof formSchema>;
 
 export const AddForm = () => {
+  const { addBookmark } = useBookmarks();
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -42,7 +43,7 @@ export const AddForm = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
-    const result = await addItem(
+    const result = await addBookmark(
       data.title,
       data.description,
       data.link,
