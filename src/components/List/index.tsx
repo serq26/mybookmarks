@@ -14,9 +14,11 @@ import { useBookmarks } from "../../context/BookmarksContext";
 import { useEffect, useState } from "react";
 import { Bookmark } from "../../types/bookmark";
 import { RiArrowRightLine, RiDeleteBinLine } from "react-icons/ri";
+import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 
 const List = () => {
   const { bookmarks, loading, filter, deleteBookmark } = useBookmarks();
+  const { confirm } = useConfirmDialog();
   const [filteredData, setFilteredData] = useState<Bookmark[]>([]);
 
   useEffect(() => {
@@ -29,7 +31,16 @@ const List = () => {
   }, [bookmarks, filter.website]);
 
   const handleDeleteItem = async (documentId: string) => {
-    // AlertDialog
+    const confirmed = await confirm({
+      title: "Silme işlemi",
+      message: "Bu öğeyi silmek istediğinizden emin misiniz?",
+    });
+    if (confirmed) {
+      console.log("Silme işlemi onaylandı.");
+      // Silme işlemini yap
+    } else {
+      console.log("Kullanıcı vazgeçti.");
+    }
     console.log("document => ", documentId);
     return;
     await deleteBookmark(documentId);

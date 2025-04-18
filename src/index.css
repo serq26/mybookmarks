@@ -55,8 +55,8 @@ button:focus-visible {
 .list_card {
   transition: all 0.3s ease-in-out;
   &:hover {
-    transform: scale(0.97);
-    background-color: #0e3354;
+    /* transform: scale(0.97); */
+    background-color: #2e3534;
   }
 
   &:hover .card_icon {
