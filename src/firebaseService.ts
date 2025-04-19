@@ -6,10 +6,14 @@ import {
   orderBy,
   deleteDoc,
   doc,
+  limit,
+  startAfter,
+  where,
 } from "firebase/firestore";
 import db from "./firebaseConfig";
 import { firebaseTimestampToDate } from "./utils";
-import { Bookmark } from "./types/bookmark";
+import { Bookmark, BookmarkQueryParams } from "./types/bookmark";
+import { PAGINATION } from "./constants";
 
 export const addItem = async (
   title: string,
@@ -44,11 +48,31 @@ export const deleteItemById = async (documentId: string) => {
   }
 };
 
-export const getItems = async () => {
+export const getItems = async (params?: BookmarkQueryParams | null) => {
   try {
-    const q = query(collection(db, "items"), orderBy("createdAt", "desc"));
+    let q = query(collection(db, "items"), orderBy("createdAt", "desc"));
+
+    // query filter
+    const conditions = [];
+    if (params?.filter.website && params?.filter.website !== "all") {
+      conditions.push(where("website", "==", params?.filter.website));
+    }
+
+    // add all conditions for query filter
+    if (conditions.length > 0) {
+      q = query(q, ...conditions);
+    }
+
+    //for pagination
+    q = query(q, limit(PAGINATION.ITEMS_PER_PAGE));
+
+    if (params?.lastVisible) {
+      q = query(q, startAfter(params?.lastVisible));
+    }
+
     const querySnapshot = await getDocs(q);
     const items: Bookmark[] = [];
+
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       data.createdAt = firebaseTimestampToDate(data.createdAt).toLocaleString(
@@ -65,7 +89,11 @@ export const getItems = async () => {
         ...data,
       } as Bookmark);
     });
-    return items;
+    return {
+      items,
+      lastVisible: querySnapshot.docs[querySnapshot.docs.length - 1],
+      hasMore: querySnapshot.docs.length === PAGINATION.ITEMS_PER_PAGE,
+    };
   } catch (error) {
     console.error("Error getting documents: ", error);
     throw new Error("Data could not be retrieved");

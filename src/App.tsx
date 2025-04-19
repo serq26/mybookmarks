@@ -5,8 +5,11 @@ import { Filter } from "./components/Filter";
 import List from "./components/List";
 import { BookmarksProvider } from "./context/BookmarksContext";
 import { Toaster } from "./components/ui/toaster";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
+  const queryClient = new QueryClient();
+
   return (
     <BookmarksProvider>
       <Header />
@@ -16,7 +19,9 @@ function App() {
             <Flex justify={"flex-end"} align={"center"} w="full">
               <Filter />
             </Flex>
-            <List />
+            <QueryClientProvider client={queryClient}>
+              <List />
+            </QueryClientProvider>
           </Flex>
         </GridItem>
         <GridItem colSpan={1}>

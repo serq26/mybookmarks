@@ -6,6 +6,7 @@ import {
   Spacer,
   useDisclosure,
   Icon,
+  Link,
 } from "@chakra-ui/react";
 import { FaBookmark } from "react-icons/fa";
 // import { HamburgerIcon } from "@chakra-ui/icons";
@@ -18,9 +19,11 @@ const Header = () => {
       <Flex align="center">
         <>
           <Icon as={FaBookmark} w={6} h={6} color="white" mr={2} />
-          <Heading size="lg" fontWeight="bold">
-            My BookMarks
-          </Heading>
+          <Link href={"/"} color="white">
+            <Heading size="lg" fontWeight="bold">
+              My BookMarks
+            </Heading>
+          </Link>
         </>
         <Spacer />
         {/* <Flex display={{ base: "none", md: "flex" }} gap={4}>

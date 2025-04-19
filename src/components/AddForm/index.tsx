@@ -4,6 +4,7 @@ import {
   Field,
   Flex,
   Icon,
+  IconButton,
   Input,
   InputGroup,
   Stack,
@@ -19,6 +20,7 @@ import { IoLinkOutline } from "react-icons/io5";
 import { MdBookmarkAdd } from "react-icons/md";
 import { useBookmarks } from "../../context/BookmarksContext";
 import { toaster } from "../ui/toaster";
+import { FaRegTrashCan } from "react-icons/fa6";
 
 const formSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
@@ -58,6 +60,7 @@ export const AddForm = () => {
         duration: 5000,
         closable: true,
       });
+      reset();
     } else {
       toaster.error({
         title: `Bookmark cannot added.`,
@@ -65,7 +68,6 @@ export const AddForm = () => {
         closable: true,
       });
     }
-    reset();
   });
 
   return (
@@ -73,9 +75,20 @@ export const AddForm = () => {
       <Card.Root maxW="sm" my={10}>
         <Card.Header>
           <Card.Title>
-            <Flex align="center">
-              <Icon as={FaPlusCircle} w={6} h={6} color="white" mr={2} />
-              Add BookMark
+            <Flex align="center" justifyContent={"space-between"}>
+              <Flex align="center">
+                <Icon as={FaPlusCircle} w={6} h={6} color="white" mr={2} />
+                Add BookMark
+              </Flex>
+              <IconButton
+                aria-label="Clear Form"
+                variant={"ghost"}
+                rounded={"full"}
+                colorPalette={"red"}
+                onClick={() => reset()}
+              >
+                <FaRegTrashCan />
+              </IconButton>
             </Flex>
           </Card.Title>
           <Card.Description>
@@ -108,6 +121,7 @@ export const AddForm = () => {
               <Field.Label>Description</Field.Label>
               <Controller
                 name="description"
+                defaultValue=""
                 control={control}
                 render={({ field }) => (
                   <Textarea
@@ -128,6 +142,7 @@ export const AddForm = () => {
               <Field.Label>Link</Field.Label>
               <Controller
                 name="link"
+                defaultValue=""
                 control={control}
                 render={({ field }) => (
                   <InputGroup

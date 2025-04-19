@@ -10,8 +10,15 @@ import { Bookmark } from "../types/bookmark";
 
 type BookmarkKey = keyof Bookmark;
 
-type FilterType = {
-  website: string | null;
+export type FilterType = {
+  website:
+    | "website_x"
+    | "website_youtube"
+    | "website_linkedin"
+    | "website_medium"
+    | "website_other"
+    | "all"
+    | null;
 };
 
 interface BookmarksContextType {
@@ -45,7 +52,7 @@ export const BookmarksProvider = ({ children }: { children: ReactNode }) => {
   const getBookmarks = async () => {
     try {
       const response = await getItems();
-      setBookmarks(response);
+      setBookmarks(response.items);
     } catch (err) {
       console.error("Error fetching bookmarks", err);
     } finally {

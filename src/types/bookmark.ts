@@ -1,3 +1,6 @@
+import { FilterType } from "./../context/BookmarksContext";
+import { DocumentSnapshot } from "firebase/firestore";
+
 export type Bookmark = {
   id: string;
   title: string;
@@ -6,3 +9,8 @@ export type Bookmark = {
   website: string;
   createdAt: string;
 };
+
+export interface BookmarkQueryParams {
+  filter: FilterType;
+  lastVisible?: DocumentSnapshot | null;
+}
