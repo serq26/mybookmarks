@@ -114,9 +114,10 @@ const List = () => {
             color={"gray.500"}
             fontSize={14}
             fontWeight={400}
+            xlDown={{ flexDirection: "column", alignItems: "flex-start" }}
           >
             {item.createdAt}
-            <Box>
+            <Box xlDown={{ display: "flex" }}>
               <Button
                 colorPalette={"red"}
                 color={"red.400"}

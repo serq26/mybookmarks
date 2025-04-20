@@ -13,10 +13,24 @@ function App() {
   return (
     <BookmarksProvider>
       <Header />
-      <Grid templateColumns="repeat(3, 1fr)" gap="6">
-        <GridItem colSpan={2}>
+      <Grid
+        gridTemplateColumns={{
+          base: "repeat(3, 1fr)",
+          xlDown: "repeat(1, 1fr)",
+        }}
+        gap={{
+          base: 6,
+          xlDown: 0,
+        }}
+      >
+        <GridItem colSpan={2} order={{ base: 1, xlDown: 2 }}>
           <Flex gap="4" direction="column" alignItems="start" p={10}>
-            <Flex justify={"flex-end"} align={"center"} w="full">
+            <Flex
+              justify={"flex-end"}
+              align={"center"}
+              w="full"
+              xlDown={{ display: "block", overflow: "scroll" }}
+            >
               <Filter />
             </Flex>
             <QueryClientProvider client={queryClient}>
@@ -24,7 +38,11 @@ function App() {
             </QueryClientProvider>
           </Flex>
         </GridItem>
-        <GridItem colSpan={1}>
+        <GridItem
+          colSpan={1}
+          order={{ base: 2, xlDown: 1 }}
+          xlDown={{ display: "flex", justifyContent: "center" }}
+        >
           <AddForm />
         </GridItem>
       </Grid>

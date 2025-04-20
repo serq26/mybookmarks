@@ -50,7 +50,7 @@ export function useConfirmDialog() {
     <Dialog.Root role="alertdialog" open={open}>
       <Portal>
         <Dialog.Backdrop />
-        <Dialog.Positioner>
+        <Dialog.Positioner xlDown={{ padding: "0 20px" }}>
           <Dialog.Content>
             <Dialog.Header>
               <Dialog.Title>{dialogOptions.title}</Dialog.Title>

@@ -72,7 +72,7 @@ export const AddForm = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Card.Root maxW="sm" my={10}>
+      <Card.Root maxW="sm" my={10} xlDown={{ minWidth: "90vw" }}>
         <Card.Header>
           <Card.Title>
             <Flex align="center" justifyContent={"space-between"}>
