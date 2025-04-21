@@ -5,7 +5,6 @@ import {
   Flex,
   Heading,
   Icon,
-  Image,
   Link,
   Spinner,
   Text,
@@ -20,6 +19,7 @@ import { toaster } from "../ui/toaster";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getItems } from "../../firebaseService";
 import { DocumentSnapshot } from "firebase/firestore";
+import { CiCalendarDate } from "react-icons/ci";
 
 const List = () => {
   const { filter, deleteBookmark, getBookmarks } = useBookmarks();
@@ -88,8 +88,6 @@ const List = () => {
     );
   }
 
-  console.log("all => ", allItems);
-
   return (
     <>
       {allItems.map((item, index) => (
@@ -116,7 +114,10 @@ const List = () => {
             fontWeight={400}
             xlDown={{ flexDirection: "column", alignItems: "flex-start" }}
           >
-            {item.createdAt}
+            <Flex align={"center"} gap={1}>
+              <CiCalendarDate />
+              {item.createdAt}
+            </Flex>
             <Box xlDown={{ display: "flex" }}>
               <Button
                 colorPalette={"red"}
@@ -147,17 +148,6 @@ const List = () => {
         >
           Load More
         </Button>
-      )}
-      {!hasNextPage && allItems.length > 0 && (
-        <Box
-          width={"full"}
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          mt={4}
-        >
-          <Image src="/the-end.gif" />
-        </Box>
       )}
       {ConfirmDialog}
     </>
