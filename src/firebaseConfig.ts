@@ -3,13 +3,13 @@ import "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyChpDiOBdRu4U4aFeB-I5tWrF3ySovA6WU",
-  authDomain: "mybookmarks-a1dfa.firebaseapp.com",
-  projectId: "mybookmarks-a1dfa",
-  storageBucket: "mybookmarks-a1dfa.firebasestorage.app",
-  messagingSenderId: "97666717942",
-  appId: "1:97666717942:web:f5650982b3aa29371bb4d7",
-  measurementId: "G-7182399PSZ",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);

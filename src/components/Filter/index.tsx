@@ -1,4 +1,4 @@
-import { HStack, SegmentGroup, Text } from "@chakra-ui/react";
+import { HStack, SegmentGroup } from "@chakra-ui/react";
 import { BsBrowserChrome } from "react-icons/bs";
 import { FaLinkedin, FaMedium, FaYoutube } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
@@ -10,7 +10,6 @@ export const Filter = () => {
 
   return (
     <>
-      <Text mr={4}>Filter: </Text>
       <SegmentGroup.Root
         defaultValue={"all"}
         onValueChange={(e) => filterBookmarks("website", e.value as string)}
