@@ -3,7 +3,7 @@ import { BsBrowserChrome } from "react-icons/bs";
 import { FaLinkedin, FaMedium, FaYoutube } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { MdClearAll } from "react-icons/md";
-import { useBookmarks } from "../../context/BookmarksContext";
+import { useBookmarks } from "../../hooks/useBookmarks";
 
 export const Filter = () => {
   const { filterBookmarks } = useBookmarks();

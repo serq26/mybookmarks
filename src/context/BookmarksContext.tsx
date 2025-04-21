@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useState,
-  useEffect,
-} from "react";
+import { createContext, ReactNode, useState, useEffect } from "react";
 import { addItem, deleteItemById, getItems } from "../firebaseService";
 import { Bookmark } from "../types/bookmark";
 
@@ -40,7 +34,7 @@ const BookmarksContext = createContext<BookmarksContextType | undefined>(
   undefined
 );
 
-export const BookmarksProvider = ({ children }: { children: ReactNode }) => {
+const BookmarksProvider = ({ children }: { children: ReactNode }) => {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [filter, setFilter] = useState<FilterType>({ website: null });
   const [loading, setLoading] = useState<boolean>(true);
@@ -96,10 +90,4 @@ export const BookmarksProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useBookmarks = () => {
-  const context = useContext(BookmarksContext);
-  if (!context) {
-    throw new Error("useBookmarks must be used within a BookmarksProvider");
-  }
-  return context;
-};
+export { BookmarksContext, BookmarksProvider };

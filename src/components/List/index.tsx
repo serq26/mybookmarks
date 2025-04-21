@@ -10,8 +10,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { getWebsiteIcon } from "../../utils";
-import { useBookmarks } from "../../context/BookmarksContext";
-import { useEffect } from "react";
 import { RiArrowRightLine, RiDeleteBinLine } from "react-icons/ri";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { ListSkeleton } from "../Skeletons/ListSkeleton";
@@ -20,6 +18,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getItems } from "../../firebaseService";
 import { DocumentSnapshot } from "firebase/firestore";
 import { CiCalendarDate } from "react-icons/ci";
+import { useBookmarks } from "../../hooks/useBookmarks";
 
 const List = () => {
   const { filter, deleteBookmark, getBookmarks } = useBookmarks();
@@ -45,7 +44,7 @@ const List = () => {
   });
   const allItems = data?.pages.flatMap((page) => page.items) || [];
 
-  useEffect(() => {}, [filter.website]);
+  // useEffect(() => {}, [filter.website]); ////// Context gerek olmayabilir artık incele !!!!!!!!!!!!
 
   const handleDeleteItem = async (documentId: string) => {
     const confirmed = await confirmPopup({

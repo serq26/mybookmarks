@@ -18,9 +18,9 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IoLinkOutline } from "react-icons/io5";
 import { MdBookmarkAdd } from "react-icons/md";
-import { useBookmarks } from "../../context/BookmarksContext";
 import { toaster } from "../ui/toaster";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { useBookmarks } from "../../hooks/useBookmarks";
 
 const formSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
