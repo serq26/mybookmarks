@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -84,6 +85,15 @@ const List = () => {
       <Box width={"full"} textAlign="center" mt={8}>
         <Text color="red.500">Error loading items: {error.message}</Text>
       </Box>
+    );
+  }
+
+  if (allItems.length === 0) {
+    return (
+      <Alert.Root status="info" colorPalette="teal">
+        <Alert.Indicator />
+        <Alert.Title>There are no bookmarks in this category.</Alert.Title>
+      </Alert.Root>
     );
   }
 

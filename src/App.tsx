@@ -34,15 +34,15 @@ function App() {
       >
         <GridItem colSpan={2} order={{ base: 1, xlDown: 2 }}>
           <Flex gap="4" direction="column" alignItems="start" padding={"20px"}>
-            <Text mr={4} fontWeight={"bold"}>
-              Filter:{" "}
-            </Text>
             <Flex
-              justify={"flex-end"}
+              justify={"space-between"}
               align={"center"}
               w="full"
               xlDown={{ display: "block", overflow: "scroll" }}
             >
+              <Text mr={4} fontWeight={"bold"}>
+                Filter:
+              </Text>
               <Filter />
             </Flex>
             <QueryClientProvider client={queryClient}>
