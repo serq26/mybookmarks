@@ -1,15 +1,4 @@
-import {
-  Button,
-  Card,
-  Field,
-  Flex,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  Stack,
-  Textarea,
-} from "@chakra-ui/react";
+import { Button, Card, Field, Flex, Icon, IconButton, Input, InputGroup, Stack, Textarea } from "@chakra-ui/react";
 import { FaPlusCircle } from "react-icons/fa";
 import { CustomSelect } from "../Select";
 import { useState } from "react";
@@ -21,6 +10,7 @@ import { MdBookmarkAdd } from "react-icons/md";
 import { toaster } from "../ui/toaster";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useBookmarks } from "../../hooks/useBookmarks";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
@@ -32,7 +22,8 @@ const formSchema = yup.object().shape({
 type FormValues = yup.InferType<typeof formSchema>;
 
 export const AddForm = () => {
-  const { addBookmark, getBookmarks } = useBookmarks();
+  const { addBookmark, filter } = useBookmarks();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -46,20 +37,15 @@ export const AddForm = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
-    const result = await addBookmark(
-      data.title,
-      data.description,
-      data.link,
-      data.website as string
-    );
+    const result = await addBookmark(data.title, data.description, data.link, data.website as string);
     if (result.id) {
       setLoading(false);
-      getBookmarks();
       toaster.success({
         title: `Bookmark added.`,
         duration: 5000,
         closable: true,
       });
+      queryClient.invalidateQueries({ queryKey: ["items", filter] });
       reset();
     } else {
       toaster.error({
@@ -91,9 +77,7 @@ export const AddForm = () => {
               </IconButton>
             </Flex>
           </Card.Title>
-          <Card.Description>
-            Fill in the form below to create an bookmark
-          </Card.Description>
+          <Card.Description>Fill in the form below to create an bookmark</Card.Description>
         </Card.Header>
         <Card.Body>
           <Stack gap="4" w="full">
@@ -145,11 +129,7 @@ export const AddForm = () => {
                 defaultValue=""
                 control={control}
                 render={({ field }) => (
-                  <InputGroup
-                    startElement={
-                      <Icon as={IoLinkOutline} w={6} h={6} color="gray" />
-                    }
-                  >
+                  <InputGroup startElement={<Icon as={IoLinkOutline} w={6} h={6} color="gray" />}>
                     <Input {...field} placeholder="Link" />
                   </InputGroup>
                 )}
@@ -157,11 +137,7 @@ export const AddForm = () => {
               <Field.ErrorText>{errors.link?.message}</Field.ErrorText>
             </Field.Root>
             <Field.Root invalid={!!errors.website}>
-              <Controller
-                name="website"
-                control={control}
-                render={({ field }) => <CustomSelect {...field} />}
-              />
+              <Controller name="website" control={control} render={({ field }) => <CustomSelect {...field} />} />
               <Field.ErrorText>{errors.website?.message}</Field.ErrorText>
             </Field.Root>
           </Stack>
