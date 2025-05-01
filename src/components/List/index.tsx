@@ -1,43 +1,22 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  Icon,
-  Link,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Alert, Box, Button, Card, Flex, Heading, Icon, Link, Spinner, Text } from "@chakra-ui/react";
 import { getWebsiteIcon } from "../../utils";
 import { RiArrowRightLine, RiDeleteBinLine } from "react-icons/ri";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { ListSkeleton } from "../Skeletons/ListSkeleton";
 import { toaster } from "../ui/toaster";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { getItems } from "../../firebaseService";
 import { DocumentSnapshot } from "firebase/firestore";
 import { CiCalendarDate } from "react-icons/ci";
 import { useBookmarks } from "../../hooks/useBookmarks";
 
 const List = () => {
-  const { filter, deleteBookmark, getBookmarks } = useBookmarks();
+  const { filter, deleteBookmark } = useBookmarks();
+  const queryClient = useQueryClient();
   const { confirmPopup, ConfirmDialog } = useConfirmDialog();
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    error,
-  } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useInfiniteQuery({
     queryKey: ["items", filter],
-    queryFn: ({ pageParam }) =>
-      getItems({
-        filter,
-        lastVisible: pageParam,
-      }),
+    queryFn: ({ pageParam }) => getItems({ filter, lastVisible: pageParam }),
     getNextPageParam: (lastPage) => {
       return lastPage.hasMore ? lastPage.lastVisible : undefined;
     },
@@ -55,16 +34,12 @@ const List = () => {
       cancelText: "Cancel",
       confirmType: "delete",
     });
+
     if (confirmed) {
       const response = await deleteBookmark(documentId);
       if (response) {
-        getBookmarks();
-        toaster.success({
-          title: `Bookmark was deleted.`,
-          type: "success",
-          duration: 5000,
-          closable: true,
-        });
+        toaster.success({ title: `Bookmark was deleted.`, type: "success", duration: 5000, closable: true });
+        queryClient.invalidateQueries({ queryKey: ["items", filter] });
       } else {
         toaster.error({
           title: `Bookmark cannot delete!`,
@@ -105,12 +80,7 @@ const List = () => {
             <Flex justify={"space-between"}>
               <Heading size="md">{item.title}</Heading>
               <Link href={item.link} target="_blank" color="white">
-                <Icon
-                  className="card_icon"
-                  as={getWebsiteIcon(item.website)}
-                  w={6}
-                  h={6}
-                />
+                <Icon className="card_icon" as={getWebsiteIcon(item.website)} w={6} h={6} />
               </Link>
             </Flex>
           </Card.Header>
@@ -148,13 +118,7 @@ const List = () => {
       ))}
       {isFetchingNextPage && <Spinner size="xl" mx="auto" my={4} />}
       {hasNextPage && !isFetchingNextPage && (
-        <Button
-          onClick={() => fetchNextPage()}
-          color="teal"
-          mt={4}
-          mx="auto"
-          loading={isFetchingNextPage}
-        >
+        <Button onClick={() => fetchNextPage()} color="teal" mt={4} mx="auto" loading={isFetchingNextPage}>
           Load More
         </Button>
       )}
